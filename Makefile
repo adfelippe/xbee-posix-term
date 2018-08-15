@@ -120,6 +120,10 @@ transparent_terminal : $(transparent_terminal_OBJECTS)
 .c.o :
 	$(COMPILE) -c $<
 
+# in the project src directory
+%.o : $(DRIVER)/src/%.c
+	$(COMPILE) -c $<
+
 # in a posix generic dependency folder
 %.o : $(DRIVER)/posix/%.c
 	$(COMPILE) -c $<

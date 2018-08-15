@@ -140,30 +140,30 @@ int transparent_rx(const wpan_envelope_t FAR *envelope, void FAR *context)
 }
 
 // function receiving data on transparent serial cluster when ATAO=0
-int receive_handler( xbee_dev_t *xbee, const void FAR *raw,
-	uint16_t length, void FAR *context)
+int receive_handler(xbee_dev_t *xbee, const void FAR *raw,
+		    uint16_t length, void FAR *context)
 {
 	const xbee_frame_receive_t FAR *rx_frame = raw;
 
-	if (length >= offsetof( xbee_frame_receive_t, payload))
+	if (length >= offsetof(xbee_frame_receive_t, payload))
 	{
-		transparent_dump( &rx_frame->ieee_address, rx_frame->payload,
-				length - offsetof( xbee_frame_receive_t, payload));
+		transparent_dump(&rx_frame->ieee_address, rx_frame->payload,
+				 length - offsetof( xbee_frame_receive_t, payload));
 	}
 
 	return 0;
 }
 
-void node_discovered( xbee_dev_t *xbee, const xbee_node_id_t *rec)
+void node_discovered(xbee_dev_t *xbee, const xbee_node_id_t *rec)
 {
 	if (rec != NULL)
 	{
-		node_add( rec);
-		xbee_disc_node_id_dump( rec);
+		node_add(rec);
+		xbee_disc_node_id_dump(rec);
 	}
 }
 
-int node_add_manual( xbee_dev_t *xbee, const char *mac_address)
+int node_add_manual(xbee_dev_t *xbee, const char *mac_address)
 {
 	int error;
 	xbee_node_id_t node;
@@ -172,14 +172,14 @@ int node_add_manual( xbee_dev_t *xbee, const char *mac_address)
 	error = addr64_parse( &node.ieee_addr_be, mac_address);
 	if (error != 0)
 	{
-		printf( "error %d trying to parse '%s' as 64-bit address\n",
+		printf("error %d trying to parse '%s' as 64-bit address\n",
 				error, mac_address);
 	}
 	else
 	{
 		node.network_addr = WPAN_NET_ADDR_UNDEFINED;
-		sprintf( node.node_info, "%08" PRIX32, be32toh( node.ieee_addr_be.l[1]));
-		node_discovered( xbee, &node);
+		sprintf( node.node_info, "%08" PRIX32, be32toh(node.ieee_addr_be.l[1]));
+		node_discovered(xbee, &node);
 	}
 
 	return error;
