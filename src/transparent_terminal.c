@@ -1,4 +1,6 @@
 /*
+ * Origin pieces of code by:
+ *
  * Copyright (c) 2007-2012 Digi International Inc.,
  * All rights not expressly granted are reserved.
  *
@@ -8,43 +10,27 @@
  *
  * Digi International Inc. 11001 Bren Road East, Minnetonka, MN 55343
  * =======================================================================
+ * 15 Aug 2018
+ *
+ * This Source Code Form is subject to the terms of GPL v3 license.
+ * If a copy of the GPL was not distributed with this file,
+ * You can obtain one at https://www.gnu.org/licenses/gpl-3.0.pt-br.html
+ *
+ * Anderson Felippe <adfelippe@gmail.com>
+ * =======================================================================
  */
 
 /*
-	Transparent Serial Client sample
+	Transparent POSIX Terminal over XBee
 
-	This sample demonstrates sending simple streams of data between XBee nodes
-	on a network.  It uses the Digi Transparent Serial cluster; the same
-	cluster used by XBee modules running "AT firmware" instead of "API firmware".
+	This application will create a transparent terminal between two
+	XBee nodes connected to a POSIX device with any Shell terminal.
+	Application can run in either HOST or CLIENT mode to receive and
+	send shell commands.
+	HOST will receive a commdn and respond its output to the CLIENT.
+	CLIENT will send commands and print their remote output.
 
-	"Smart" Network Nodes:
-	Run this sample on one or more Rabbit modules, with one configured as the
-	coordinator and others as routers.  Each of the smart nodes can send to any
-	other node on the network
-
-	"Dumb" Network Nodes:
-	Set up multiple XBee modules with "AT mode" or "Transparent Serial"
-	firmware, configured as routers and joined to the coordinator.  Each router
-	module should have its "DH" and "DL" parameters set to 0 so they will send
-	serial data to the coordinator (Rabbit).  Give each router a unique name
-	(the "NI" parameter).
-
-	If you don't want the coordinator to receive data from the "dumb" nodes,
-	you will need to configure the DH/DL values on each router to match the
-	SH/SL (MAC address) of the node to receive the data.
-
-	Connect each "dumb node" up to a serial port on a PC and open a terminal to
-	that serial port.  Make sure the baud rate matches the "BD" parameter on
-	that XBee!
-
-	Data entered into the serial port of the "dumb nodes" is automatically sent
-	to the XBee module specified in that node's DH/DL registers.  The "smart
-	nodes" can search the network (via the "ND" command) and select any node
-	by its Node ID (NI) to send data to.
-
-	Smart nodes display received data with the name of the device that sent it.
-	Dumb nodes just display the data in its raw form.
-
+	Please refer to the README file in order to obtain further details.
 */
 
 #include <ctype.h>
