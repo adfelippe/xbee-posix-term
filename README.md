@@ -44,3 +44,9 @@ Project is built on GNU Make. Just run `make` to compile it. You must have the u
 ### License
 
 This project is distribuited under the GPL v3 license. Please read the [LICENSE](https://raw.githubusercontent.com/adfelippe/xbee-posix-term/master/LICENSE) file for further details.
+
+### TO-DO
+
+- Provide a tool to deal with complex commands which reads data from files such as `cat` or `dd`, for example.
+- Write unit tests for current implementation
+- Test on various embedded platforms to find any particularities.
