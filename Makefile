@@ -102,12 +102,6 @@ zigbee_OBJECTS = $(wpan_OBJECTS) zigbee_zcl.o zigbee_zdo.o zcl_types.o
 
 atinter_OBJECTS = xbee_readline.o _atinter.o
 
-atinter : $(xbee_OBJECTS) $(atinter_OBJECTS) atinter.o
-	$(COMPILE) -o $@ $^
-
-apply_profile : $(xbee_OBJECTS) apply_profile.o
-	$(COMPILE) -o $@ $^
-
 transparent_terminal_OBJECTS = $(zigbee_OBJECTS) $(util_OBJECTS) transparent_terminal.o \
 	$(atinter_OBJECTS) _nodetable.o \
 	xbee_discovery.o \

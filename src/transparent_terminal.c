@@ -99,19 +99,22 @@ void transparent_dump(const addr64 FAR *ieee, const void FAR *payload,
 	//printf("%u bytes from ", length);
 
 	node_id = node_by_addr(ieee);
-	if (node_id != NULL) {
-		printf( "'%s':\n", node_id->node_info);
-	} else {
-		printf( "%s:\n", addr64_format(buffer, ieee));
+
+	if (mode == MODE_HOST) {
+		if (node_id != NULL) {
+			printf( "'%s':\n", node_id->node_info);
+		} else {
+			printf( "%s:\n", addr64_format(buffer, ieee));
+		}
 	}
 
 	for (i = 0; i < length && isprint(message[i]); ++i);
 
 	if (mode == MODE_CLIENT) {
-		printf("%.*s\n", length, message);
+		printf("%.*s", length, message);
 	} else if (mode == MODE_HOST) {
 		// host mode will run local command and transmit
-		printf( "\t%.*s\n", length, message);
+		printf("\t%.*s\n", length, message);
 		char terminal_cmd[250] = {0};
 		strncpy(terminal_cmd, (char*)message, length);
 		printf("terminal_cmd = %s\n", terminal_cmd);
@@ -123,10 +126,12 @@ void transparent_dump(const addr64 FAR *ieee, const void FAR *payload,
 		for (i = 0; i < size; i++) {
 			memset(response, '\0', MAX_CMD_LINE_SIZE);
 			list_head(&cmd_response_list, (void*)response, true);
-			printf("%d\t %s", i, response);
+			printf("[%d]\t %s", i, response);
 			send_data(target, response, strlen(response));
 		}
 
+	} else {
+		hex_dump( message, length, HEX_DUMP_FLAG_TAB);
 	}
 }
 
@@ -189,31 +194,31 @@ int send_data(const xbee_node_id_t *node_id, void FAR *data, uint16_t length)
 {
 	wpan_envelope_t env;
 
-	wpan_envelope_create( &env, &my_xbee.wpan_dev, &node_id->ieee_addr_be,
-		node_id->network_addr);
+	wpan_envelope_create(&env, &my_xbee.wpan_dev, &node_id->ieee_addr_be,
+			     node_id->network_addr);
 	env.payload = data;
 	env.length = length;
 
-	return xbee_transparent_serial( &env);
+	return xbee_transparent_serial(&env);
 }
 
-int send_string( const xbee_node_id_t *node_id, char FAR *str)
+int send_string(const xbee_node_id_t *node_id, char FAR *str)
 {
-	return send_data( node_id, str, strlen( str));
+	return send_data(node_id, str, strlen( str));
 }
 
-int send_test( const xbee_node_id_t *node_id, int bytes)
+int send_test(const xbee_node_id_t *node_id, int bytes)
 {
 	char buffer[XBEE_MAX_RFPAYLOAD];
 
 	if (bytes < 0 || bytes > XBEE_MAX_RFPAYLOAD)
 	{
-		printf( "Must send between 1 and %u bytes\n", (int) XBEE_MAX_RFPAYLOAD);
+		printf("Must send between 1 and %u bytes\n", (int) XBEE_MAX_RFPAYLOAD);
 		return -EINVAL;
 	}
 
-	memset( buffer, 'X', bytes);
-	return send_data( node_id, buffer, bytes);
+	memset(buffer, 'X', bytes);
+	return send_data(node_id, buffer, bytes);
 }
 
 /////// use the endpoint table when AO is non-zero
@@ -272,19 +277,19 @@ const xbee_dispatch_table_entry_t xbee_frame_handlers[] =
 
 void print_menu( void)
 {
-	puts( "help                 This list of options.");
-	puts( "nd                   Initiate node discovery.");
-	puts( "nd <node id string>  Search for a specific node ID.");
-	puts( "atXX[=YY]            AT command to get/set an XBee parameter.");
-	puts( "    Optional value can be decimal (YYY), hex (0xYYYY)"
+	puts("help                 This list of options.");
+	puts("nd                   Initiate node discovery.");
+	puts("nd <node id string>  Search for a specific node ID.");
+	puts("atXX[=YY]            AT command to get/set an XBee parameter.");
+	puts("    Optional value can be decimal (YYY), hex (0xYYYY)"
 																" or string \"YYY\"");
-	puts( "target               Show the list of known targets.");
-	puts( "target SOME STRING   Set target based on its NI value.");
-	puts( "mac <mac address>    Manually add target using its MAC address");
-	puts( "test <num>           Send a packet of <num> bytes to target");
-	puts( "");
-	puts( "   All other commands are sent to the current target.");
-	puts( "");
+	puts("target               Show the list of known targets.");
+	puts("target SOME STRING   Set target based on its NI value.");
+	puts("mac <mac address>    Manually add target using its MAC address");
+	puts("test <num>           Send a packet of <num> bytes to target");
+	puts("");
+	puts("   All other commands are sent to the current target.");
+	puts("");
 }
 
 /*
@@ -300,47 +305,55 @@ int main(int argc, char *argv[])
 	int i;
 	xbee_serial_t XBEE_SERPORT;
 
-	if (strcmp("host", argv[2]) == 0)
+	if (argc < 3) {
+		printf("Too few arguments. Please provide device address and terminal mode. Example:\n");
+		printf("\t./transparent_terminal /dev/ttyUSB0 client\n");
+		exit(0);
+	}
+
+	if (strcmp("host", argv[2]) == 0) {
 		mode = MODE_HOST;
-	else if (strcmp("client", argv[2]) == 0)
+		printf("Terminal started in HOST MODE\n");
+		printf("This mode is used to receive commands and send back their responses to the CLIENT\n");
+	} else if (strcmp("client", argv[2]) == 0) {
 		mode = MODE_CLIENT;
-	else
-		printf("Second command argument is neither 'host' nor 'client'.\nAssuming HOST mode.\n");
+		printf("Terminal started in CLIENT MODE\n");
+		printf("This mode is used to send terminal commands to the HOST and print their responses\n");
+
+	} else {
+		printf("Second command argument is neither 'host' nor 'client'\nAssuming HOST mode\n");
+		printf("This mode is used to receive commands from the CLIENT and send back their responses\n");
+	}
 
 	parse_serial_arguments(argc, argv, &XBEE_SERPORT);
-
 	// initialize the serial and device layer for this XBee device
 	if (xbee_dev_init(&my_xbee, &XBEE_SERPORT, NULL, NULL)) {
 		printf("Failed to initialize device.\n");
 		return 0;
 	}
-
 	// Initialize the WPAN layer of the XBee device driver.  This layer enables
 	// endpoints and clusters, and is required for all ZigBee layers.
 	xbee_wpan_init(&my_xbee, sample_endpoints);
-
 	// Register handler to receive Node ID messages
 	xbee_disc_add_node_id_handler(&my_xbee, &node_discovered);
-
 	//Init list to store command response
 	if (list_new(&cmd_response_list, MAX_CMD_LINE_SIZE, NULL) != 0) {
 		printf("Failed to create list to store command response!\n");
 	}
-
 	// Initialize the AT Command layer for this XBee device and have the
 	// driver query it for basic information (hardware version, firmware version,
 	// serial number, IEEE address, etc.)
 	xbee_cmd_init_device(&my_xbee);
+
 	printf( "Waiting for driver to query the XBee device...\n");
 	do {
-		xbee_dev_tick( &my_xbee);
+		xbee_dev_tick(&my_xbee);
 		status = xbee_cmd_query_status( &my_xbee);
 	} while (status == -EBUSY);
 	if (status)
 	{
 		printf( "Error %d waiting for query to complete.\n", status);
 	}
-
 	// report on the settings
 	xbee_dev_dump_settings(&my_xbee, XBEE_DEV_DUMP_FLAG_DEFAULT);
 
