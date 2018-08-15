@@ -360,6 +360,7 @@ int main(int argc, char *argv[])
       }
       else if (! strcmpi( cmdstr, "quit"))
       {
+	      		list_destroy(&cmd_response_list);
 			return 0;
 		}
       else if (! strncmpi( cmdstr, "AT", 2))
