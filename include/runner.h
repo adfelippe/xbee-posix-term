@@ -13,7 +13,7 @@
 
 #include "list.h"
 
-#define MAX_CMD_LINE_SIZE	255	/* Maximum size of a single line command response.
+#define MAX_CMD_LINE_SIZE	250	/* Maximum size of a single line command response.
 					   255 characters should be enough. */
 
 int run_system_command(const char* cmd, list *response);

@@ -12,13 +12,13 @@ DEFINE = -DPOSIX \
 	-DXBEE_XMODEM_TESTING
 
 # directory for driver
-DRIVER = ../..
+DRIVER = .
 
 # path to include files
 INCDIR = $(DRIVER)/include
 
 # path to common source files
-SRCDIR = $(DRIVER)/src
+SRCDIR = $(DRIVER)/xbee_drv
 
 LIBS = -lpthread
 
@@ -120,8 +120,12 @@ transparent_terminal : $(transparent_terminal_OBJECTS)
 .c.o :
 	$(COMPILE) -c $<
 
+# in a posix generic dependency folder
+%.o : $(DRIVER)/posix/%.c
+	$(COMPILE) -c $<
+
 # ...or in common samples directory...
-%.o : ../common/%.c
+%.o : common/%.c
 	$(COMPILE) -c $<
 
 # ...or in SRCDIR...

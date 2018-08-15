@@ -61,4 +61,3 @@ void parse_serial_arguments( int argc, char *argv[], xbee_serial_t *serial)
 		serial->device[strcspn(serial->device, "\r\n")] = '\0';
 	}
 }
-

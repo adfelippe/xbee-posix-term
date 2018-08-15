@@ -52,7 +52,6 @@
 #include <stddef.h>
 #include <string.h>
 #include <stdlib.h>
-
 #include "xbee/atcmd.h"
 #include "xbee/byteorder.h"
 #include "xbee/device.h"
@@ -64,13 +63,10 @@
 #include "zigbee/zdo.h"
 #include "list.h"
 #include "runner.h"
-
 // Common code for handling AT command syntax and execution
 #include "_atinter.h"
-
 // Common code for handling remote node lists
 #include "_nodetable.h"
-
 // Function for parsing serial port settings from command-line arguments
 #include "parse_serial_args.h"
 
@@ -85,34 +81,31 @@ xbee_dev_t my_xbee;
 xbee_node_id_t *target = NULL;
 // Linked list for the command response
 static list cmd_response_list;
-//Mode
+// Mode
 int mode = MODE_HOST;
-//Prototypes
+// Private prototypes
 int send_data(const xbee_node_id_t *node_id, void FAR *data, uint16_t length);
 
 
 void transparent_dump(const addr64 FAR *ieee, const void FAR *payload,
-		uint16_t length)
+		      uint16_t length)
 {
 	xbee_node_id_t *node_id;
 	char buffer[ADDR64_STRING_LENGTH];
 	char response[MAX_CMD_LINE_SIZE];
 	const uint8_t FAR *message = payload;
-	uint16_t i, j, size;
+	uint16_t i, size;
 
-	printf( "%u bytes from ", length);
+	//printf("%u bytes from ", length);
 
-	node_id = node_by_addr( ieee);
-	if (node_id != NULL)
-	{
+	node_id = node_by_addr(ieee);
+	if (node_id != NULL) {
 		printf( "'%s':\n", node_id->node_info);
-	}
-	else
-	{
-		printf( "%s:\n", addr64_format( buffer, ieee));
+	} else {
+		printf( "%s:\n", addr64_format(buffer, ieee));
 	}
 
-	for (i = 0; i < length && isprint( message[i]); ++i);
+	for (i = 0; i < length && isprint(message[i]); ++i);
 
 	if (mode == MODE_CLIENT) {
 		printf("%.*s\n", length, message);
@@ -127,23 +120,21 @@ void transparent_dump(const addr64 FAR *ieee, const void FAR *payload,
 
 		size = list_size(&cmd_response_list);
 
-		for (j = 0; j < size; j++) {
+		for (i = 0; i < size; i++) {
 			memset(response, '\0', MAX_CMD_LINE_SIZE);
 			list_head(&cmd_response_list, (void*)response, true);
 			printf("%d\t %s", j, response);
 			send_data(target, response, strlen(response));
 		}
 
-	} else {
-		//hex_dump(message, length, HEX_DUMP_FLAG_TAB);
 	}
 }
 
 // function receiving data on transparent serial cluster when ATAO != 0
-int transparent_rx( const wpan_envelope_t FAR *envelope, void FAR *context)
+int transparent_rx(const wpan_envelope_t FAR *envelope, void FAR *context)
 {
-	transparent_dump( &envelope->ieee_address, envelope->payload,
-		envelope->length);
+	transparent_dump(&envelope->ieee_address, envelope->payload,
+			 envelope->length);
 
 	return 0;
 }
@@ -261,7 +252,6 @@ const wpan_endpoint_table_entry_t sample_endpoints[] = {
 };
 
 ////////// end of endpoint table, only necessary if ATAO is not 0
-
 const xbee_dispatch_table_entry_t xbee_frame_handlers[] =
 {
 	XBEE_FRAME_HANDLE_LOCAL_AT,
