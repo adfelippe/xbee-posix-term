@@ -24,10 +24,15 @@ Example using target command (bold commands are typed by the user):
 
 Example using mac command (bold commands are typed by the user):
 ><b>`nd`</b> (nd is the command for Node Discovey, in case nodes aren't scanned when application starts)
+
 >`Address:0013a200-40eaeabc 0xfffe  PARENT:0xfffe  Router  NI:[]`
+
 ><b>`mac 0013a200-40eaeabc`</b>
+
 >`Address:0013a200-40eaeabc 0xfffe  PARENT:0x0000   Coord  NI:[40EAEABC]`
+
 ><b>`target 40EAEABC`</b>
+
 >`target: Address:0013a200-40eaeabc 0xfffe  PARENT:0x0000   Coord  NI:[40EAEABC]`
 
 Type help from the application to get further assistance and more useful commands.
