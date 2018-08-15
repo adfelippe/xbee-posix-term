@@ -156,7 +156,8 @@ int xbee_dev_init(xbee_dev_t *xbee, const xbee_serial_t *serport,
 		error = xbee_ser_flowcontrol(&xbee->serport, 1);
 	}
 
-	xbee->flags = XBEE_DEV_FLAG_USE_FLOWCONTROL;
+	xbee->flags |= XBEE_DEV_FLAG_USE_FLOWCONTROL;
+	//xbee->flags &= ~XBEE_DEV_FLAG_USE_FLOWCONTROL;
 
 	#ifdef XBEE_DEVICE_ENABLE_ATMODE
 		// fill in default values for GT, CT and CC registers

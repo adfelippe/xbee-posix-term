@@ -70,11 +70,6 @@
 // Function for parsing serial port settings from command-line arguments
 #include "parse_serial_args.h"
 
-enum mode {
-	MODE_HOST,
-	MODE_CLIENT
-} terminal_mode;
-
 // An instance required for the local XBee
 xbee_dev_t my_xbee;
 // Node ID to be the target
@@ -305,27 +300,17 @@ int main(int argc, char *argv[])
 	int i;
 	xbee_serial_t XBEE_SERPORT;
 
-	if (argc < 3) {
-		printf("Too few arguments. Please provide device address and terminal mode. Example:\n");
-		printf("\t./transparent_terminal /dev/ttyUSB0 client\n");
-		exit(0);
-	}
+	// Parse terminal arguments
+	parse_serial_arguments(argc, argv, &XBEE_SERPORT, &mode);
 
-	if (strcmp("host", argv[2]) == 0) {
-		mode = MODE_HOST;
+	if (mode == MODE_HOST) {
 		printf("Terminal started in HOST MODE\n");
 		printf("This mode is used to receive commands and send back their responses to the CLIENT\n");
-	} else if (strcmp("client", argv[2]) == 0) {
-		mode = MODE_CLIENT;
+	} else {
 		printf("Terminal started in CLIENT MODE\n");
 		printf("This mode is used to send terminal commands to the HOST and print their responses\n");
-
-	} else {
-		printf("Second command argument is neither 'host' nor 'client'\nAssuming HOST mode\n");
-		printf("This mode is used to receive commands from the CLIENT and send back their responses\n");
 	}
 
-	parse_serial_arguments(argc, argv, &XBEE_SERPORT);
 	// initialize the serial and device layer for this XBee device
 	if (xbee_dev_init(&my_xbee, &XBEE_SERPORT, NULL, NULL)) {
 		printf("Failed to initialize device.\n");

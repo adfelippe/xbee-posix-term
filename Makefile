@@ -1,7 +1,5 @@
-# Makefile for XBee Driver on POSIX platforms
-
+# Makefile based on the one from XBee Driver on POSIX platforms
 # Autodepend methods from http://make.paulandlesley.org/autodep.html
-
 # If you get a "no rule to make target" error for some random .h file, try
 # deleting all .d files.
 
@@ -26,7 +24,11 @@ LIBS = -lpthread
 # -MMD generates dependency files automatically, omitting system files
 # -MP creates phony targets for each prerequisite in a .d file
 
-COMPILE = gcc -iquote$(INCDIR) -Wall $(DEFINE)
+# Target gcc compiler
+#CC = arm-linux-gcc
+CC = gcc
+
+COMPILE = $(CC) $(LIBS) -iquote$(INCDIR) -Wall $(DEFINE)
 
 EXE = transparent_terminal
 

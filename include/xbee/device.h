@@ -309,22 +309,19 @@ enum xbee_dev_rx_state {
 
 enum xbee_dev_flags
 {
-	XBEE_DEV_FLAG_CMD_INIT			= 0x0001,	///< xbee_cmd_init called
-	XBEE_DEV_FLAG_QUERY_BEGIN		= 0x0002,	///< started querying device
-	XBEE_DEV_FLAG_QUERY_DONE		= 0x0004,	///< querying completed
-	XBEE_DEV_FLAG_QUERY_ERROR		= 0x0008,	///< querying timed out or error
+	XBEE_DEV_FLAG_CMD_INIT		= 0x0001,	///< xbee_cmd_init called
+	XBEE_DEV_FLAG_QUERY_BEGIN	= 0x0002,	///< started querying device
+	XBEE_DEV_FLAG_QUERY_DONE	= 0x0004,	///< querying completed
+	XBEE_DEV_FLAG_QUERY_ERROR	= 0x0008,	///< querying timed out or error
 	XBEE_DEV_FLAG_QUERY_REFRESH	= 0x0010,	///< need to re-query device
-	XBEE_DEV_FLAG_QUERY_INPROGRESS= 0x0020,	///< query is in progress
-
-	XBEE_DEV_FLAG_IN_TICK			= 0x0080,	///< in xbee_dev_tick
-
-	XBEE_DEV_FLAG_COORDINATOR		= 0x0100,	///< Node Type is Coordinator
-	XBEE_DEV_FLAG_ROUTER				= 0x0200,	///< Node Type is Router
-	XBEE_DEV_FLAG_ENDDEV				= 0x0400,	///< Node Type is End Device
-	XBEE_DEV_FLAG_ZNET				= 0x0800,	///< Firmware is ZNet
-	XBEE_DEV_FLAG_ZIGBEE				= 0x1000,	///< Firmware is ZigBee
-	XBEE_DEV_FLAG_DIGIMESH			= 0x2000,	///< Firmware is DigiMesh
-
+	XBEE_DEV_FLAG_QUERY_INPROGRESS	= 0x0020,	///< query is in progress
+	XBEE_DEV_FLAG_IN_TICK		= 0x0080,	///< in xbee_dev_tick
+	XBEE_DEV_FLAG_COORDINATOR	= 0x0100,	///< Node Type is Coordinator
+	XBEE_DEV_FLAG_ROUTER		= 0x0200,	///< Node Type is Router
+	XBEE_DEV_FLAG_ENDDEV		= 0x0400,	///< Node Type is End Device
+	XBEE_DEV_FLAG_ZNET		= 0x0800,	///< Firmware is ZNet
+	XBEE_DEV_FLAG_ZIGBEE		= 0x1000,	///< Firmware is ZigBee
+	XBEE_DEV_FLAG_DIGIMESH		= 0x2000,	///< Firmware is DigiMesh
 	// (cast to int required by Codewarrior/HCS08 platform if enum is signed)
 	XBEE_DEV_FLAG_USE_FLOWCONTROL	= (int)0x8000,	///< Check CTS before sending
 };
