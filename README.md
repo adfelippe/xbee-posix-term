@@ -11,7 +11,7 @@ Application has been tested on an XBee PRO S3B 900HP module and can send simple 
 The application take two arguments: (1) XBee module physical device path and (2) terminal mode.
 1. Pass the module physical device path. e.g.: /dev/ttyUSB0
 2. Pass either "host" or "client" to the second argument. Default mode is "host".
-> - While in CLIENT mode, application read a command and send it to be executed on the remote node host system.
+> - While in CLIENT mode, application reads a command and sends it to be executed on the remote node host system.
 > - While in HOST mode, application sends received commands to the local terminal and sends the command output back to the remote node.
 
 Command example: `./transparent_terminal /dev/ttyUSB0 client`
