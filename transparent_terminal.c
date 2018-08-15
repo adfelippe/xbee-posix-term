@@ -123,7 +123,7 @@ void transparent_dump(const addr64 FAR *ieee, const void FAR *payload,
 		for (i = 0; i < size; i++) {
 			memset(response, '\0', MAX_CMD_LINE_SIZE);
 			list_head(&cmd_response_list, (void*)response, true);
-			printf("%d\t %s", j, response);
+			printf("%d\t %s", i, response);
 			send_data(target, response, strlen(response));
 		}
 
