@@ -1,7 +1,7 @@
 # xbee-posix-term
 ## POSIX Shell Terminal implementation over XBee
 
-This is an application written to create an terminal-like application to send and receive shell commands over XBee while both nodes are connected to a POSIX-compliant device (e.g.: An embedded Linux device).
+This is an application written to create a terminal-like application to send and receive shell commands over XBee while both nodes are connected to a POSIX-compliant device (e.g.: An embedded Linux device).
 This code is strongly based on the original 'terminal_client' posix example from the Digi XBee ANSI C Library [here](https://github.com/digidotcom/xbee_ansic_library).
 
 Application has been tested on an XBee PRO S3B 900HP module and can send simple terminal commands that don't depend on reading complex input data such as file contents for example.
